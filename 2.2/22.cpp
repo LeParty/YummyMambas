@@ -30,6 +30,11 @@
 #include <windows.h>
 #include <fstream>
 using namespace std;
+void Zah1()
+{
+
+
+}
 
 int main()
 {
