@@ -10,7 +10,7 @@ using namespace std;
 
 int main()
 {
-
+	///////'Проверка ростик' ответ жду 
 
     return 0;
 }
