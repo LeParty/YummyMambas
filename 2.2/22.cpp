@@ -11,7 +11,7 @@ using namespace std;
 int main()
 {
 	///////'Проверка ростик' ответ жду 
-
+	//asdasdasdasdsadqwe
     return 0;
 }
 
