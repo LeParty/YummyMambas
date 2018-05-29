@@ -8,37 +8,67 @@
 #include <fstream>
 #include <time.h>
 #include <ctime>
-
-
-
+#include <iomanip>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <cstring>
+#include <sstream>
+#include <conio.h>
 using namespace std;
-
 int q, p, n, Fn, e;
 bool chek = 0;
+int encrypt( int i, int e,  int n);
+/* void file2()
+{
+	string c;
+	ofstream file1("txt.txt");
+	getline(cin, c);
+	file1 << c;
+	file1.close();
+
+} */ 
 
 void create();
 void proverka(int);
 void createE();
-
+string msg;
 int main()
 {
+	fstream file3;
 	srand(time(0));
-	create();
+ 	create();
 	cout << "q = " << q << " p = " << p << endl;
 	n = q * p;
 	cout << "n = " << n << endl;
 	Fn = (q - 1)*(p - 1);
 	cout << "F(n) = " << Fn << endl;
 	createE();
+	ofstream file1("test.txt");
+    int encryptedText[100];
+	getline(cin, msg);
+	for ( int i = 0; i < msg.length(); i++)
+	{
+		encryptedText[i] = encrypt(msg[i],e, n);
 
-	return 0;
+	}
+
+      cout << "\nTHE ENCRYPTED MESSAGE IS:" << endl;
+
+	for ( int i = 0; i < msg.length(); i++)
+	{
+		cout << encryptedText[i] << endl;
+		file1 << encryptedText[i];
+		
+	}
+	file1.close();
 }
 
 void create()
 {
 	for (int i = 0; i < 1; i++)
 	{
-		q = rand() % 3000 + 7000;
+		q = rand() % 100;
 		proverka(q);
 		if (chek == 1)
 		{
@@ -48,7 +78,7 @@ void create()
 	}
 	for (int i = 0; i < 1; i++)
 	{
-		p = rand() % 3000 + 7000;
+		p = rand() % 100;
 		proverka(p);
 		if (chek == 1)
 		{
@@ -141,4 +171,19 @@ void createE()
 		}
 	}
 	cout << "e = " << e << endl;
+}
+
+int encrypt(int i, int e, int n)
+{
+	int current, result;
+
+	current = i - 97;
+	result = 1;
+	for (int j = 0; j < e; j++)
+	{
+		result = result * current;
+		result = result % n;
+
+	}
+	return result;
 }
