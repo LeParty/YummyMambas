@@ -13,7 +13,7 @@
 
 using namespace std;
 
-int q, p, n, Fn, e;
+int q, p, n, Fn, e, d;
 bool chek = 0;
 
 void create();
@@ -24,12 +24,20 @@ int main()
 {
 	srand(time(0));
 	create();
+	proverka(5701);
 	cout << "q = " << q << " p = " << p << endl;
 	n = q * p;
 	cout << "n = " << n << endl;
 	Fn = (q - 1)*(p - 1);
 	cout << "F(n) = " << Fn << endl;
 	createE();
+
+	for (int i = 0; i < 1; i++)
+	{
+		d = rand() % (Fn - 3) + 2;
+		gcd(d, e);
+
+	}
 
 	return 0;
 }
@@ -72,7 +80,7 @@ void proverka(int chislo)
 		if (w4 == 0)
 		{
 			chek = 1;
-			//cout << "-";
+			cout << "-";
 			return;
 		}
 	}
@@ -142,3 +150,21 @@ void createE()
 	}
 	cout << "e = " << e << endl;
 }
+
+int gcd(int a, int b)
+{
+	int c;
+	while (b)
+	{
+		c = a % b;
+		a = b;
+		b = c;
+	}
+	return abs(a);
+}
+
+
+
+
+
+
