@@ -1,165 +1,268 @@
 //22
-#include "stdafx.h" 
+
+#include "stdafx.h"
 #include <math.h>
-#include <iostream> 
-#include <conio.h> 
-#include <string> 
-#include <windows.h> 
-#include <fstream>
-#include <time.h>
+#include <iostream>
+#include <string>
+#include <vector>
 #include <ctime>
-#include <iomanip>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <cstring>
-#include <sstream>
+#include <time.h>
 #include <conio.h>
+#include <Windows.h>
 using namespace std;
 
-int q, p, n, Fn, e;
-bool chek = 0;
-int encrypt( int i, int e,  int n);
-/* void file2()
+vector<int> q, p;
+
+vector<int> create(vector<int> mas)
 {
-	string c;
-	ofstream file1("txt.txt");
-	getline(cin, c);
-	file1 << c;
-	file1.close();
+	cout << "Vvedite dlinu chisla " << endl;
+	int number;
+	cin >> number;
 
-} */ 
+	for (int i = 0; i < number; i++)
+	{
+		if (i == 0)
+		{
+			int hz = rand() % 9 + 1;
+			mas.push_back(hz);
+		}
+		else
+		{
+			int hz = rand() % 10;
+			mas.push_back(hz);
+		}
+	}
+	return mas;
+}
 
-void create();
-void proverka(int);
-void createE();
-string msg;
+void ShowVector(vector<int> mas)
+{
+	for (int i = 0; i < mas.size(); i++)
+	{
+		cout << mas[i];
+	}
+	cout << endl;
+}
+
+void func()
+{
+	string number;
+
+
+	cin >> number;
+
+	for (int i = 0; i < number.length(); i++)
+	{
+		const char tmp = number.c_str()[i];
+		q.push_back(atoi(&tmp));
+	}
+
+	ShowVector(q);
+
+	cin >> number;
+
+	for (int i = 0; i < number.length(); i++)
+	{
+		const char tmp = number.c_str()[i];
+		p.push_back(atoi(&tmp));
+	}
+
+	ShowVector(p);
+}
+
+vector<int> Umn(vector<int> mas1, vector<int> mas2)
+{
+	vector<int> res;
+	vector<vector<int>> mul;
+
+	for (int i = mas1.size() - 1; i >= 0; i--)
+	{
+		vector<int> tmp;
+
+		for (int j = mas2.size() - 1; j >= 0; j--)
+		{
+			int tmpcalc = mas1[i] * mas2[j];
+			tmp.push_back(tmpcalc);
+		}
+		tmp.insert(tmp.begin(), mas1.size() - i - 1, 0);
+		mul.push_back(tmp);
+	}
+
+	int maxsize = 0;
+	for (int i = 1; i < mul.size(); i++)
+	{
+		if (mul[i].size() > maxsize)
+			maxsize = mul[i].size();
+	}
+
+	mul[0].resize(maxsize);
+
+	for (int i = 1; i < mul.size(); i++)
+	{
+		for (int j = 0; j < mul[i].size(); j++)
+		{
+			mul[0][j] += mul[i][j];
+		}
+	}
+
+	int c = 0;
+
+	for (int i = 0; i < mul[0].size(); i++)
+	{
+		int tmp = mul[0][i];
+		mul[0][i] = (tmp + c) % 10;
+		c = (tmp + c) / 10;
+	}
+	//mul[0][mul[0].size() - 1] += c;
+
+	int c_copy = c;
+
+	while (c_copy > 1)
+	{
+		int a = c_copy % 10;
+		mul[0].push_back(a);
+		c_copy = c_copy / 10;
+	}
+
+	for (int i = 0; i < mul[0].size(); i++)
+	{
+		res.push_back(mul[0][mul[0].size() - 1 - i]);
+	}
+
+	return res;
+	//return mul[0];
+}
+
+vector<int> vich(vector<int> mas1, vector<int> mas2)
+{
+	/*
+	int h = mas1.size() - mas2.size();
+	if (h >= 3)
+	{
+	vector<int> mas2tmp = mas2;
+	for (int i = 0; i < h - 1; i++)
+	{
+	mas2tmp.push_back(0);
+	//mas2 = mas2 * 10;
+	}
+	mas1 = vich(mas1, mas2tmp);
+	//return vich(mas1, mas2);
+	}
+	*/
+	if (mas1.size() < mas2.size())
+	{
+		mas1.insert(mas1.begin(), mas2.size() - mas1.size(), 0);
+		return vich(mas2, mas1);
+	}
+	if (mas2.size() < mas1.size())
+	{
+		mas2.insert(mas2.begin(), mas1.size() - mas2.size(), 0);
+		//return vich(mas2, mas1);
+	}
+	if (mas1.size() == mas2.size())
+	{
+		if (mas1[0] < mas2[0])
+		{
+			return vich(mas2, mas1);
+		}
+		else
+		{
+			vector<int> res;
+			int c = 0;
+
+			for (int j = mas1.size() - 1; j >= 0; j--)
+			{
+
+				if ((mas1[j] - c) >= mas2[j])
+				{
+					int a = mas1[j] - c - mas2[j];
+					res.push_back(a);
+					c = 0;
+				}
+				if ((mas1[j] - c) < mas2[j])
+				{
+					int a = mas1[j] + 10 - c - mas2[j];
+					c = 1;
+					res.push_back(a);
+				}
+			}
+			vector<int> res1;
+			for (int i = 0; i < res.size(); i++)
+			{
+				res1.push_back(res[res.size() - 1 - i]);
+			}
+			return res1;
+		}
+	}
+}
+
+vector<int> Evklid(vector<int> mas1, vector<int> mas2)
+{
+	bool Ch = 0;
+	for (int i = 0; i < mas2.size(); i++)
+	{
+		if (mas2[i] != 0)
+		{
+			Ch = 1;
+			break;
+		}
+	}
+	if (Ch == 0)
+	{
+		return mas1;
+	}
+	if (Ch == 1)
+	{
+		Ch = 0;
+		//vector<int> tmp = mas1;
+		while (mas1 >= mas2)
+		{
+			mas1 = vich(mas1, mas2);
+		}
+		return Evklid(mas2, mas1);
+	}
+}
+
+/*
+vector<int> Prostoe(vector<int> mas)
+{
+int G = mas.size() / 2 + 1;
+int g = 0;
+for (int i = 0; i < G; i++)
+{
+
+}
+
+}
+*/
+
 int main()
 {
-	fstream file3;
 	srand(time(0));
-	create();
-	cout << "q = " << q << " p = " << p << endl;
-	n = q * p;
-	cout << "n = " << n << endl;
-	Fn = (q - 1)*(p - 1);
-	cout << "F(n) = " << Fn << endl;
-	createE();
-	ofstream file1("test.txt");
-    int encryptedText[100];
-	getline(cin, msg);
-	for ( int i = 0; i < msg.length(); i++)
-	{
-		encryptedText[i] = encrypt(msg[i],e, n);
+	//func();
+	//vector<int>resUm = Umn(q, p);
+	//ShowVector(resUm);
+
+	q = create(q);
+	ShowVector(q);
+
+	p = create(p);
+	ShowVector(p);
+
+	//vector<int>resUm = Umn(q, p);
+	//ShowVector(resUm);
+
+	//vector<int>resVi = vich(q, p);
+	//ShowVector(resVi);
+
+	vector<int>resEv = Evklid(q, p);
+	cout << "obshii delitel = ";
+	ShowVector(resEv);
+
+
+
+
 
 	return 0;
 }
 
-void create()
-{
-	for (int i = 0; i < 1; i++)
-	{
-		q = rand() % 100;
-		proverka(q);
-		if (chek == 1)
-		{
-			i--;
-			chek = 0;
-		}
-	}
-	for (int i = 0; i < 1; i++)
-	{
-		p = rand() % 100;
-		proverka(p);
-		if (chek == 1)
-		{
-			i--;
-			chek = 0;
-		}
-	}
-}
-
-void proverka(int chislo)
-{
-	float w1, w2;
-	w1 = sqrt(chislo);
-	w2 = modf(w1, &w2);
-	w1 = w1 - w2;
-	for (float i = 2.0; i < w1 + 1; i++)
-	{
-		float w3, w4;
-		w3 = chislo / i;
-		w4 = modf(w3, &w4);
-		if (w4 == 0)
-		{
-			chek = 1;
-			cout << "-";
-			return;
-		}
-	}
-}
-
-void createE()
-{
-	float w9, w10;
-	w9 = sqrt(Fn);
-	w10 = modf(w9, &w10);
-	w9 = w9 - w10;
-	int* FnM = new int[w9 + 1];
-	for (int i = 0; i < w9 + 1; i++)
-	{
-		FnM[i] = 0;
-	}
-	int o = 0;
-	for (float i = 2.0; i < w9 + 1; i++)
-	{
-		float w11, w12;
-		w11 = Fn / i;
-		w12 = modf(w11, &w12);
-		if (w12 == 0)
-		{
-			FnM[o] = i;
-			FnM[o + 1] = w11;
-			o = o + 2;
-		}
-	}
-	for (int P = 0; P < 1; P++)
-	{
-		e = rand() % (Fn - 3) + 2;
-		float w5, w6;
-		w5 = sqrt(e);
-		w6 = modf(w5, &w6);
-		w5 = w5 - w6;
-		int* EM = new int [w5+1];
-		for (int I = 0; I < w5 + 1; I++)
-		{
-			EM[I] = 1;
-		}
-		o = 0;
-		for (float i = 2.0; i < w5 + 1; i++)
-		{
-			float w7, w8;
-			w7 = e / i;
-			w8 = modf(w7, &w8);
-			if (w8 == 0)
-			{
-				EM[o] = i;
-				EM[o + 1] = w7;
-				o = o + 2;
-			}
-		}
-		for (int j = 0; j < w5 + 1; j++)
-		{
-			for (int l = 0; l < w9 + 1; l++)
-			{
-				if (EM[j] == FnM[l])
-				{
-					P--;
-					j = w5 + 1;
-					break;
-				}
-			}
-		}
-	}
-	cout << "e = " << e << endl;
-}
