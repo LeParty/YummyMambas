@@ -58,10 +58,8 @@ int main()
 	for ( int i = 0; i < msg.length(); i++)
 	{
 		cout << encryptedText[i] << endl;
-		file1 << encryptedText[i];
-		
+	
 	}
-	file1.close();
 }
 
 void create()
